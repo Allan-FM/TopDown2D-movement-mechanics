@@ -18,12 +18,30 @@ public class PlayerController : MonoBehaviour
     {
         if (movementInput != Vector2.zero)
         {
-            int count = rb.Cast(movementInput, movementFilter, 
-                castCollision, speed * Time.deltaTime + collisionOffSet);
-            if(count == 0)
+            bool  success = TryMove(movementInput);
+            if(!success)
             {
-                rb.MovePosition(rb.position + movementInput * speed * Time.fixedDeltaTime);
+                success = TryMove(new Vector2(movementInput.x, 0));
+                if(!success)
+                {
+                    success = TryMove(new Vector2(0, movementInput.y));
+                }
+
             }
+        }
+    }
+    private bool TryMove(Vector2 direction)
+    {
+        int count = rb.Cast(direction, movementFilter, 
+                castCollision, speed * Time.deltaTime + collisionOffSet);
+        if(count == 0)
+        {
+            rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     private void OnMove(InputValue movementValue)

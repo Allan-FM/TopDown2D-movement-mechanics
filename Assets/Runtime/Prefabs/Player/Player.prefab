@@ -191,4 +191,4 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  collisionOffSet: 0.05
+  collisionOffSet: 0.02
