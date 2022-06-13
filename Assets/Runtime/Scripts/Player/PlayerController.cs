@@ -7,46 +7,47 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed = 1f;
     [SerializeField] private ContactFilter2D movementFilter;
     [SerializeField] private float collisionOffSet = 0.05f;
-    private Rigidbody2D rb;
-    private Vector2 movementInput;
+    private PlayerAnimationController playerAnimationController;
     private List<RaycastHit2D> castCollision = new List<RaycastHit2D>();
+    private Rigidbody2D rb;
+
+    public Vector2 MovementInput {get; private set;}
+    private Vector2 movementInput => MovementInput;
+    
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerAnimationController = GetComponent<PlayerAnimationController>();
     }
     private void FixedUpdate()
     {
-        if (movementInput != Vector2.zero)
-        {
-            bool  success = TryMove(movementInput);
-            if(!success)
-            {
-                success = TryMove(new Vector2(movementInput.x, 0));
-                if(!success)
-                {
-                    success = TryMove(new Vector2(0, movementInput.y));
-                }
-
-            }
-        }
+        playerAnimationController.PlayerMotionAnimation();
+        playerAnimationController.FlipSpriteToMovement();
     }
-    private bool TryMove(Vector2 direction)
+    public bool TryMove(Vector2 direction)
     {
-        int count = rb.Cast(direction, movementFilter, 
-                castCollision, speed * Time.deltaTime + collisionOffSet);
-        if(count == 0)
+        if(direction != Vector2.zero)
         {
-            rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
-            return true;
+            int count = rb.Cast(direction, movementFilter, 
+                    castCollision, speed * Time.deltaTime + collisionOffSet);
+            if(count == 0)
+            {
+                rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
+                return true;
+            }
+            else
+            {
+            return false;
+            }
         }
         else
         {
-            return false;
+            return false;    
         }
     }
     private void OnMove(InputValue movementValue)
     {  
-        movementInput = movementValue.Get<Vector2>();
+        MovementInput = movementValue.Get<Vector2>();
     }
 }
 
