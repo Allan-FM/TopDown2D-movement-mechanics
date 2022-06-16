@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimationController playerAnimationController;
     private List<RaycastHit2D> castCollision = new List<RaycastHit2D>();
     private Rigidbody2D rb;
-
     public Vector2 MovementInput {get; private set;}
     private Vector2 movementInput => MovementInput;
     
@@ -48,6 +47,10 @@ public class PlayerController : MonoBehaviour
     private void OnMove(InputValue movementValue)
     {  
         MovementInput = movementValue.Get<Vector2>();
+    }
+    private void OnFire()
+    {
+        playerAnimationController.AnimationAttack();
     }
 }
 

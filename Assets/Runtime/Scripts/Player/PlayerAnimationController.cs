@@ -5,8 +5,11 @@ using UnityEngine;
 public class PlayerAnimationController : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
+    [SerializeField] private SwordAttack swordAttack;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    private bool canMove = true;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -14,6 +17,7 @@ public class PlayerAnimationController : MonoBehaviour
     }
     public void PlayerMotionAnimation()
     {
+
         if(player.MovementInput != Vector2.zero)
         {
             bool success = player.TryMove(player.MovementInput);
@@ -31,6 +35,7 @@ public class PlayerAnimationController : MonoBehaviour
         {
             animator.SetBool(PlayerAnimationConstants.IsMoving, false);
         }
+
     }
     public void FlipSpriteToMovement()
     {
@@ -42,6 +47,27 @@ public class PlayerAnimationController : MonoBehaviour
         {
             spriteRenderer.flipX = false;   
         }
+
+    }
+    private void SwordAttack()
+    {
+        LockMovement();
+        if(spriteRenderer.flipX == true)
+        {
+            swordAttack.AttackLeft();
+        }
+        else
+        {
+            swordAttack.AttackRigth();
+        }
+    }
+    public void AnimationAttack()
+    {
+        animator.SetTrigger(PlayerAnimationConstants.SwordAttack);
+    }
+    private void LockMovement()
+    {
+        canMove = false;
     }
 }
 
